@@ -17,10 +17,12 @@ from django.contrib import admin
 from django.urls import include, path
 
 
-from todo.api import views
+from todo import views
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('todo.api.urls')),
+    path('users/<int:pk>/', views.userInfo),
+
 ]

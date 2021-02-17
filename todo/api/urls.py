@@ -4,6 +4,7 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
+from rest_framework.permissions import IsAdminUser
 
 
 from todo.api import views
@@ -12,7 +13,7 @@ from todo.api import views
 
 urlpatterns = [
   path('home/', views.HomeView.as_view()),
-  path('users/<int:pk>/', views.UserViewSet.as_view()),
+  path('users/<int:pk>/', views.UserViewSet.as_view(permission_classes = [IsAdminUser])),
   path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
   path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
   path('login/', views.LoginView.as_view()),

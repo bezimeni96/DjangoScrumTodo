@@ -5,7 +5,6 @@ from rest_framework.decorators import api_view
 from rest_framework import viewsets
 from .mixins import RetrieveModelMixin
 
-
 from todo.models import ToDo
 from django.contrib.auth.models import User
 from todo.api.serializers import UserSerializer, LoginSerializer
@@ -54,4 +53,26 @@ class UserMeView(APIView):
       "pk" : current_user.pk,
       "Username" : current_user.username,
       "Email" : current_user.email,
+      "First name" : current_user.first_name,
+      "Last name" : current_user.last_name,
       })
+
+
+
+class FilterUserView(APIView):
+  def get(self, request):
+
+    searchTerm = request.data['name']
+    all_users = User.objects.all().filter(first_name__contains = searchTerm).values() | User.objects.all().filter(last_name__contains = searchTerm).values()
+    if (len(all_users) < 1):
+      return Response({"Message" : "There is not user with this search term."}, status = status.HTTP_404_NOT_FOUND)
+
+    fitered_users = []
+    for person in all_users:
+      serializer = UserSerializer(person)
+      fitered_users.append(serializer.data)
+
+    return Response({
+      "Search term": searchTerm,
+      "Filtered users": fitered_users,
+    })

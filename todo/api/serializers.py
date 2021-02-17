@@ -11,10 +11,13 @@ class UserSerializer(serializers.Serializer):
   username = serializers.CharField(max_length = 128)
   password = serializers.CharField(max_length = 128, write_only = True)
   email = serializers.EmailField(max_length = 128, read_only = True)
+  first_name = serializers.CharField(max_length = 128, read_only = True)
+  last_name = serializers.CharField(max_length = 128, read_only = True)
+
 
   class Meta:
     model = User
-    fields = ['pk', 'username', 'password', 'email']
+    fields = ['pk', 'username', 'password', 'email', 'first_name', 'last_name']
 
 
 class LoginSerializer(serializers.Serializer):
@@ -42,6 +45,8 @@ class LoginSerializer(serializers.Serializer):
     return {
       'email': user.email,
       'username':user.username,
+      'first_name':user.first_name,
+      'last_name':user.last_name,
       'token_refresh': str(refresh),
       'token_access':str(refresh.access_token)
     }
